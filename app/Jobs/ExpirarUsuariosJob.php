@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Jobs;
 
 use App\Services\ExpirarUsuariosService;
@@ -8,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ExpireUsersJob implements ShouldQueue
+class ExpirarUsuariosJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
