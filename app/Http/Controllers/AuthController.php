@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterUserRequest;
-use App\Models\User;
+use App\Http\Requests\RegisterUsuarioRequest;
+use App\Models\Usuario;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,22 +11,22 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(RegisterUserRequest $request): JsonResponse
+    public function register(RegisterUsuarioRequest $request): JsonResponse
     {
-        $user = User::create([
-            'name'            => $request->name,
+        $usuario = Usuario::create([
+            'nome'            => $request->nome,
             'email'           => $request->email,
-            'password'        => $request->password,
-            'phone'           => $request->phone,
-            'birth_date'      => $request->birth_date,
-            'status'          => 'active',
-            'expired_date' => Carbon::today()->addDays(7),
+            'senha'           => $request->senha,
+            'telefone'        => $request->telefone,
+            'data_nascimento' => $request->data_nascimento,
+            'status'          => 'ativo',
+            'data_expiracao'  => Carbon::today()->addDays(7),
         ]);
 
-        $token = Auth::login($user);
+        $token = Auth::login($usuario);
 
         return response()->json([
-            'user'  => $user,
+            'usuario' => $usuario,
             'token' => $token,
         ], 201);
     }
@@ -35,19 +35,19 @@ class AuthController extends Controller
     {
         $request->validate([
             'email'    => 'required|email',
-            'password' => 'required|string',
+            'senha'    => 'required|string|min:6',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $usuario = Usuario::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$usuario || !Hash::check($request->senha, $usuario->senha)) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
 
-        $token = Auth::login($user);
+        $token = Auth::login($usuario);
 
         return response()->json([
-            'user'  => $user,
+            'usuario' => $usuario,
             'token' => $token,
         ]);
     }
