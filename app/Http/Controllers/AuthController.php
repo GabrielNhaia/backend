@@ -20,7 +20,7 @@ class AuthController extends Controller
             'phone'           => $request->phone,
             'birth_date'      => $request->birth_date,
             'status'          => 'active',
-            'expiration_date' => Carbon::today()->addDays(7),
+            'expired_date' => Carbon::today()->addDays(7),
         ]);
 
         $token = Auth::login($user);

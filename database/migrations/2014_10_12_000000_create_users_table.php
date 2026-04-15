@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('phone')->nullable();
             $table->date('birth_date')->nullable();
-            $table->enum('status', ['active', 'expired'])->default('ativo');
+            $table->enum('status', ['active', 'expired'])->default('active');
             $table->date('expired_date')->nullable();
             $table->timestamps();
         });
