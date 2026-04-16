@@ -8,15 +8,18 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function register(RegisterUsuarioRequest $request): JsonResponse
     {
+        $senha = $request->senha ?? $request->password;
+
         $usuario = Usuario::create([
             'nome'            => $request->nome,
             'email'           => $request->email,
-            'senha'           => $request->senha,
+            'senha'           => Hash::make($senha),
             'telefone'        => $request->telefone,
             'data_nascimento' => $request->data_nascimento,
             'status'          => 'ativo',
@@ -33,10 +36,21 @@ class AuthController extends Controller
 
     public function login(Request $request): JsonResponse
     {
-        $request->validate([
+        $request->merge([
+            'senha' => $request->input('senha', $request->input('password')),
+        ]);
+
+        $validator = Validator::make($request->all(), [
             'email'    => 'required|email',
             'senha'    => 'required|string|min:6',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
         $usuario = Usuario::where('email', $request->email)->first();
 

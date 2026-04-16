@@ -1,9 +1,14 @@
-FROM php:8.2-cli
+FROM php:8.4-cli
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    libcurl4-openssl-dev \
     libpq-dev \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev \
     unzip \
-    && docker-php-ext-install pdo pdo_pgsql \
+    && docker-php-ext-install curl mbstring pdo pdo_pgsql xml xmlwriter zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

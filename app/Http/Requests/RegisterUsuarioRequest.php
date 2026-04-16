@@ -6,6 +6,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterUsuarioRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->filled('password') && !$this->filled('senha')) {
+            $this->merge([
+                'senha' => $this->input('password'),
+            ]);
+        }
+    }
+
     public function authorize(): bool
     {
         return true;
