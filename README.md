@@ -41,6 +41,46 @@ Tabela: `usuarios`
 - Composer
 - PostgreSQL 14+
 
+## Execucao com Docker
+
+O projeto possui `docker-compose.yml` com os servicos:
+
+- `backend` (Laravel)
+- `postgres` (PostgreSQL 16)
+
+### Subir backend + banco
+
+```bash
+docker compose up --build -d
+```
+
+### Comportamento importante de rede
+
+- Dentro do container, a API usa `DB_HOST=postgres` (nome do servico Docker).
+- A porta da API e exposta por padrao somente em localhost:
+
+```dotenv
+BACKEND_BIND_HOST=127.0.0.1
+APP_PORT=8000
+```
+
+### Expor API para outros dispositivos na rede local
+
+Se o frontend estiver em outra maquina/dispositivo, suba o backend assim:
+
+```bash
+BACKEND_BIND_HOST=0.0.0.0 docker compose up --build -d
+```
+
+### Comandos uteis
+
+```bash
+docker compose logs -f backend
+docker compose logs -f postgres
+docker compose down
+docker compose down -v
+```
+
 ## Instalação
 
 1. Clonar o projeto
@@ -111,6 +151,15 @@ Base URL local: `http://127.0.0.1:8000/api`
 - `POST /login`
 - `GET /me` (protegida com `auth:api`)
 - `POST /logout` (protegida com `auth:api`)
+
+## Compatibilidade de payload com frontend
+
+Para facilitar integracao, a API aceita ambos os campos abaixo em login/cadastro:
+
+- `senha`
+- `password`
+
+No cadastro, a senha e armazenada com hash.
 
 ## Payloads esperados
 
