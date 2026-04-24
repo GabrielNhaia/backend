@@ -333,3 +333,4 @@ php artisan migrate:fresh
 - O guard padrão está configurado para JWT (`auth:api`).
 - O model de autenticação é `App\Models\Usuario`.
 - O campo de senha armazenado é `senha` (com hash automático por mutator).
+_________
